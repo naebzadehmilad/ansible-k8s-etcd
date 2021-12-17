@@ -3,6 +3,7 @@
  scp -r /etc/kubernetes/pki ubuntu@172.16.12.12:/etc/kubernetes/
  
 3- SSH to the another Master Nodes  rm  /etc/kubernetes/apiserver.*
-4- scp FRIST_NODE/opt/master.yml to another master 
-5- scp FRIST_NODE/opt/run.sh to another master
-6. execute run.sh
+4- scp -r /etc/kubernetes/ca k8sm2:/etc/kubernetes/
+5- scp FRIST_NODE/opt/master.yml to another master 
+6- scp FRIST_NODE/opt/run.sh to another master
+7. execute run.sh
