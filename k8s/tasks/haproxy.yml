@@ -1,0 +1,19 @@
+- hosts: k8s-master
+  remote_user: root
+  vars_files:
+    - ../vars/vars.yml
+  tasks:
+  - name: change dns
+    shell: echo "nameserver 185.51.200.2" > /etc/resolv.conf
+  - name: install haproxy
+    shell: apt install -y haproxy && systemctl enable haproxy 
+  - name: copy haproxy.cfg
+    template: src=../template/haproxy.j2 dest=/etc/haproxy/haproxy.cfg mode=0644
+  - name: restart-haproxy
+    shell: systemctl restart haproxy
+  - name: install keepalived
+    shell: apt install -y keepalived && systemctl enable keepalived
+  - name: copy keepalived
+    template: src=../template/keepalived.j2 dest=/etc/keepalived/keepalived.conf mode=0644
+  - name: restart keepalived
+    shell: systemctl restart keepalived && sleep 5 
