@@ -1,0 +1,12 @@
+- hosts: etcd
+  remote_user: root
+  vars_files:
+    - ../etcd-vars/etcd-vars.yml
+  tasks:
+  - name: "create systemd service etcd "
+    template:
+      src: "../template/etcd-service.j2"
+      dest: "/etc/systemd/system/etcd.service"
+      mode: 0664 
+  - name: "enable And restart etcd "
+    shell: systemctl enable etcd && systemctl stop etcd  && sleep 3 && systemctl enable systemd-resolved && systemctl start systemd-resolved  && systemctl start etcd 
