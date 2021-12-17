@@ -1,0 +1,16 @@
+- hosts: etcd
+  remote_user: root
+  vars_files:
+    - ../etcd-vars/etcd-vars.yml
+  tasks:
+  - name: check if download file exists
+    stat:
+      path: /tmp/etcd-v{{ ETCD_VERSION }}-linux-amd64.tar.gz
+    register: download
+  - name: download
+    get_url: url=https://github.com/etcd-io/etcd/releases/download/v{{ ETCD_VERSION  }}/etcd-v{{ ETCD_VERSION }}-linux-amd64.tar.gz dest=/tmp
+    when: download.stat.exists == False
+  - name: EXTRACT
+    shell : tar -xvf /tmp/etcd-v{{ ETCD_VERSION }}-linux-amd64.tar.gz -C /tmp/
+  - name: COPY ETCD TO /usr/bin/etcd/
+    shell: cp -r /tmp/etcd-v{{ ETCD_VERSION }}-linux-amd64/etcd* /usr/bin/  && chmod +x /usr/bin/etcd* 
