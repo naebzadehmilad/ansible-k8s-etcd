@@ -1,0 +1,12 @@
+- hosts: k8s-master
+  remote_user: root
+  vars_files:
+    - ../vars/vars.yml
+  tasks:
+  - name: init-master
+    template: src=../template/master.j2 dest=/opt/master.yml mode=0644
+    when: ansible_hostname =='{{FRIST_NODENAME}}' 
+  - name: copy certs
+    shell: mkdir -p /etc/kubernetes/ca && cp /etc/etcd/*.pem /etc/kubernetes/ca/
+    when: ansible_hostname =='{{FRIST_NODENAME}}'
+
