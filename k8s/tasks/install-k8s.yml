@@ -1,0 +1,38 @@
+- hosts: k8s
+  remote_user: root
+  gather_facts: true
+  vars_files:
+    - ../vars/vars.yml
+  tasks:
+  - name: change dns
+    shell: echo "nameserver 185.51.200.2 " > /etc/resolv.conf
+  - name: Install required system packages
+    apt: name={{ item }} state=latest update_cache=yes
+    loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common']
+  - name: Add Docker GPG apt Key
+    apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+  - name: Add Docker Repository
+    apt_repository:
+       repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{DIST_RELEASE}}" 
+       state: present
+  - name: Install docker
+    apt: name=docker.io state=latest update_cache=yes
+  - name: Add Kuber GPG apt Key
+    apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg 
+        state: present
+  - name: Add Kuber Repository
+    apt_repository:
+       repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+       state: present
+  - name: install kubelet kubeadm and kubectl {{VERSION}}
+    shell: apt update && apt install kubeadm={{VERSION}} kubeadm={{VERSION}} kubectl={{VERSION}}  net-tools -y
+  - name: disable swap
+    shell: swapoff -a  
+  - name: Disable SWAP in fstab 
+    replace:
+      path: /etc/fstab
+      regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+      replace: '# \1'
