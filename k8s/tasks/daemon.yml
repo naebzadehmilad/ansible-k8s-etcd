@@ -1,0 +1,17 @@
+- hosts: k8s
+  remote_user: root
+  vars_files:
+    - ../vars/vars.yml
+  tasks:
+  - name: check /etc/docker/daemon.json
+    shell: cat /etc/docker/daemon.json || true
+    register: daemon
+  - name: /etc/docker/daemon.json
+    template: src=../template/daemon.j2   dest=/etc/docker/daemon.json mode=644
+    when: daemon.stdout.find('"storage-driver"') == -1
+  - debug: msg="{{daemon.stdout_lines}}"
+  - name: systemctl daemon-reload && systemctl restart docker
+    shell: |
+            systemctl daemon-reload
+            systemctl enable docker
+            systemctl restart docker
