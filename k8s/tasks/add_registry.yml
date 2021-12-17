@@ -1,0 +1,12 @@
+- hosts: k8s
+  remote_user: root
+  vars_files:
+    - ../vars/vars.yml
+  tasks:
+  - name: check /etc/hosts
+    shell: cat /etc/hosts
+    register: hosts
+  - name: copy hostnames
+    shell: echo {{CONTAINER_REGISTRY}} >> /etc/hosts 
+    when: hosts.stdout.find('reg.local') == -1
+  - debug: msg="{{hosts.stdout_lines}}"
