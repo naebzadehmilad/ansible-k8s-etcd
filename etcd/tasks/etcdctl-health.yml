@@ -1,0 +1,8 @@
+- hosts: etcd
+  remote_user: root
+  vars_files:
+    - ../etcd-vars/etcd-vars.yml
+  tasks:
+  - name: copy etcdctl-health 
+    template: src=../template/etcdctl-health.j2  dest=/etc/etcd/etcdctl-haelth.sh mode=0655
+    when: ansible_hostname =='{{FRIST_NODENAME}}'
