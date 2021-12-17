@@ -1,0 +1,21 @@
+- name: Ansible Copy crt  
+  hosts: etcd
+  tasks:
+    - name: Copying the ca.pem
+      become: true 
+      copy:
+        src: /tmp/k8sm1/etc/etcd/ca.pem
+        dest: /etc/etcd/ca.pem
+        mode: 0644
+    - name: Copying the kubernetes.pem
+      become: true
+      copy:
+        src: /tmp/k8sm1/etc/etcd/kubernetes.pem
+        dest: /etc/etcd/kubernetes.pem
+        mode: 0644
+    - name: copying kubernetes-key.pem
+      become: true
+      copy:
+        src: /tmp/k8sm1/etc/etcd/kubernetes-key.pem
+        dest: /etc/etcd/kubernetes-key.pem
+        mode: 0644
