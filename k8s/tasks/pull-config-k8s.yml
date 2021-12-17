@@ -1,0 +1,14 @@
+- hosts: k8s
+  remote_user: root
+  vars_files:
+    - ../vars/vars.yml
+  tasks:
+  - name: change dns 
+    shell: echo nameserver 185.51.200.2 > /etc/resolv.conf
+  - name: check docker images 
+    shell: docker images | grep kube-proxy || true
+    register: dockerps
+  - name: pull-config-k8s
+    shell: kubeadm config images pull
+    when: dockerps.stdout.find('k8s.gcr.io/kube-proxy') == -1
+  - debug: msg="{{dockerps.stdout_lines}}"
