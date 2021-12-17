@@ -1,0 +1,14 @@
+- hosts: etcd
+  remote_user: root
+  vars_files:
+    - ../etcd-vars/etcd-vars.yml
+  tasks:
+  - name: copy-etcd-conf
+    template: src=../template/etcd-conf.j2 dest=/etc/etcd/etcd.conf
+  - name: check if download /var/lib/etcd exists
+    stat:
+      path: /var/lib/etcd
+    register: etcddir
+  - name: create /var/lib/etcd
+    shell: mkdir /var/lib/etcd
+    when: etcddir.stat.exists == False
