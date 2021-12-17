@@ -36,3 +36,6 @@
       path: /etc/fstab
       regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
       replace: '# \1'
+  - name: add run.sh
+    template: src=../template/run.j2 dest=/opt/run.sh mode=655
+    when: ansible_hostname =='{{FRIST_NODENAME}}'
