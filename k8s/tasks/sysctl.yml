@@ -1,0 +1,23 @@
+- hosts: k8s
+  remote_user: root
+  vars_files:
+    - ../vars/vars.yml
+  tasks:
+  - name: check /etc/sysctl.conf
+    shell: cat /etc/sysctl.conf
+    register: sysctl
+  - name: Add parameters to sysctl.conf
+    shell: | 
+            echo ####ADDED BY ANSIBLE#### >> /etc/sysctl.conf
+            echo net.ipv6.conf.all.disable_ipv6 = 1 >> /etc/sysctl.conf
+            echo net.ipv6.conf.default.disable_ipv6 = 1 >> /etc/sysctl.conf
+            echo fs.file-max = 65535 >> /etc/sysctl.conf
+            echo net.ipv4.ip_local_port_range = 1024 65000 >> /etc/sysctl.conf
+            echo net.core.somaxconn = 32768 >> /etc/sysctl.conf
+            echo vm.swappiness=60 >> /etc/sysctl.conf
+            echo vm.vfs_cache_pressure=50 >> /etc/sysctl.conf
+            modprobe overlay
+            modprobe br_netfilter
+            sysctl -p 
+    when: sysctl.stdout.find('net.ipv6.conf.all.disable_ipv6 = 1') == -1
+  - debug: msg="{{sysctl.stdout_lines}}"
