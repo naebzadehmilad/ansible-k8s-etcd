@@ -1,0 +1,17 @@
+- hosts: k8s
+  remote_user: root
+- name: install docker and kubernetes
+  import_playbook: tasks/install-k8s.yml
+- name: pullconfig k8s
+  import_playbook: tasks/pull-config-k8s.yml
+- name: sysctl
+  import_playbook: tasks/sysctl.yml
+- name: master.yml
+  import_playbook: tasks/master.yml
+- name: daemon.yml
+  import_playbook: tasks/daemon.yml
+- name:  haproxy.yml
+  import_playbook: tasks/haproxy.yml
+- name: add_registry.yml
+  import_playbook: tasks/add_registry.yml
+
