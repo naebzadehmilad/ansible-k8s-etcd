@@ -1,0 +1,7 @@
+cfssl gencert \
+-ca={{PATH_KEYS}}/ca.pem \
+-ca-key={{PATH_KEYS}}/ca-key.pem \
+-config={{PATH_KEYS}}/ca-config.json \
+-hostname={% for server in groups['etcd'] %}{{hostvars[server]['ansible_facts']['default_ipv4']['address']}}{% if not loop.last -%},{% endif %}{%-endfor %},127.0.0.1,kubernetes.default,{{FLOATIP}},172.16.12.100,172.16.12.101,172.16.12.102,172.16.12.103,172.16.12.17,172.16.12.18,172.16.12.19,172.16.12.20,172.16.12.21,172.16.12.22,{% for server in groups['etcd'] %}{{hostvars[server]['ansible_facts']['hostname']}}{% if not loop.last -%},{% endif %}{%-endfor %} \
+-profile=kubernetes {{PATH_KEYS}}/ca-csr.json | \
+cfssljson -bare {{PATH_KEYS}}/kubernetes
