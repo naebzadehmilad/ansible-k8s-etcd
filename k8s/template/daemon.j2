@@ -1,0 +1,9 @@
+{
+  "insecure-registries": ["reg.local:{{CONTAINER_REG_PORT}}","reg.local:8084"],
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2"
+}
