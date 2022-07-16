@@ -24,22 +24,22 @@
       - /usr/bin/cfssl
       - /usr/bin/cfssljson
     when: ansible_hostname == FRIST_NODENAME 
-  - name: mkdir {{ PATH_KEYS }}
-    shell: mkdir -p {{ PATH_KEYS }}
+  - name: mkdir /tmp/{{ PATH_KEYS }}
+    shell: mkdir -p /tmp/{{ PATH_KEYS }}
   - name: generate cert and Pkeys
-    template: src=../template/genkeys.j2 dest={{ PATH_KEYS }}/genkeys.sh mode=0655 
+    template: src=../template/genkeys.j2 dest=/tmp/genkeys.sh mode=0655 
     when: ansible_hostname == FRIST_NODENAME
   - name: copy ca-csr
-    template: src=../template/ca-csr.j2 dest={{ PATH_KEYS}}/ca-csr.json mode=0644
+    template: src=../template/ca-csr.j2 dest=/tmp/{{ PATH_KEYS}}/ca-csr.json mode=0644
     when: ansible_hostname == FRIST_NODENAME
   - name: copy ca-config.json
-    template: src=../template/ca-config.j2 dest={{ PATH_KEYS}}/ca-config.json  mode=0644
+    template: src=../template/ca-config.j2 dest=/tmp/{{ PATH_KEYS}}/ca-config.json  mode=0644
     when: ansible_hostname == FRIST_NODENAME 
   - name: initialize-keys
-    shell : cfssl gencert -initca {{ PATH_KEYS }}/ca-csr.json | cfssljson -bare {{ PATH_KEYS }}/ca
+    shell : cfssl gencert -initca /tmp/{{ PATH_KEYS }}/ca-csr.json | cfssljson -bare /tmp/{{ PATH_KEYS }}/ca
     when: ansible_hostname == FRIST_NODENAME
   - name: execute script
-    command: /bin/bash {{ PATH_KEYS}}/genkeys.sh
+    command: /bin/bash /tmp/genkeys.sh
     when: ansible_hostname ==FRIST_NODENAME
   - name: check if /etc/etcd directory
     stat:
