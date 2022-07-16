@@ -1,9 +1,8 @@
 1 - Initialise the machine as a master node /opt/run.sh
 2 - Copy the certificates to another  masters   sudo scp -r /etc/kubernetes/pki ubuntu@172.16.12.11:/etc/kubernetes/ 
  
-3- SSH to the another Master Nodes  
-4- scp -r /etc/kubernetes/pki k8sm2:/etc/kubernetes/ 
-4.1- k8sm2: rm  /etc/kubernetes/pki/apiserver.*
+3- scp -r /etc/kubernetes/pki k8sm2:/etc/kubernetes/   && scp -r /etc/kubernetes/ca k8sm2:/etc/kubernetes/  
+4- k8sm2: rm  /etc/kubernetes/pki/apiserver.*
 5- scp FRIST_NODE/opt/master.yml to another master 
 6- scp FRIST_NODE/opt/run.sh to another master
 7. execute run.sh
