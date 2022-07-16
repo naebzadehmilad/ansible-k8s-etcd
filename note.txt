@@ -3,7 +3,7 @@
  
 3- SSH to the another Master Nodes  
 4- scp -r /etc/kubernetes/pki k8sm2:/etc/kubernetes/ 
-4.1- k8sm2: rm  /etc/kubernetes/apiserver.*
+4.1- k8sm2: rm  /etc/kubernetes/pki/apiserver.*
 5- scp FRIST_NODE/opt/master.yml to another master 
 6- scp FRIST_NODE/opt/run.sh to another master
 7. execute run.sh
