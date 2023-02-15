@@ -29,5 +29,5 @@
                 balance roundrobin
                 option tcp-check
                 {% for server in groups['k8s-master'] %}
-                server {{hostvars[server]['ansible_facts']['hostname']}} {{hostvars[server]['ansible_facts']['default_ipv4']['address']}}:6443 check fall 3 rise 2 
+                server {{hostvars[server]['ansible_facts']['hostname']}} {{hostvars[server]['ansible_facts']['default_ipv4']['address']}}:6443 inter 10s check fall 3 rise 2 
                 {% endfor %} 
