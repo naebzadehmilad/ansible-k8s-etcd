@@ -8,5 +8,5 @@
     when: ansible_hostname =='{{FRIST_NODENAME}}' 
   - name: copy certs
     shell: mkdir -p /etc/kubernetes/ca && cp /etc/etcd/*.pem /etc/kubernetes/ca/
-    when: ansible_hostname =='{{FRIST_NODENAME}}'
+    when: ansible_hostname == FRIST_NODENAME
 
