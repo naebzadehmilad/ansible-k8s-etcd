@@ -27,8 +27,13 @@
     apt_repository:
        repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
        state: present
-  - name: install kubelet kubeadm and kubectl {{VERSION}}
-    shell: apt update && apt install kubeadm={{VERSION}} kubeadm={{VERSION}} kubectl={{VERSION}}  net-tools -y
+  - name: Install Kubernetes tools
+    apt:
+      name:
+        - kubelet={{VERSION}}
+        - kubectl={{VERSION}}
+        - kubeadm={{VERSION}}
+      state: present
   - name: disable swap
     shell: swapoff -a  
   - name: Disable SWAP in fstab 
@@ -38,4 +43,4 @@
       replace: '# \1'
   - name: add run.sh
     template: src=../template/run.j2 dest=/opt/run.sh mode=655
-    when: ansible_hostname =='{{FRIST_NODENAME}}'
+    when: ansible_hostname == FRIST_NODENAME
