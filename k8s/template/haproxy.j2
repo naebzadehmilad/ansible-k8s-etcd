@@ -16,7 +16,7 @@
         ssl-default-bind-options no-sslv3
         frontend k8s-master 
            bind 0.0.0.0:6449
-           timeout client 30s
+           timeout client 60s
            mode tcp
            default_backend k8s-master
         backend k8s-master
