@@ -1,0 +1,51 @@
+- hosts: master
+  remote_user: root
+  gather_facts: true
+  vars_files:
+    - ../vars/vars.yml
+  tasks:
+  - name: add run.sh 
+    template: src=../template/run.j2 dest=/opt/run.sh mode=655
+  - name: add master.yml 
+    template: src=../template/master.j2 dest=/opt/master.yml mode=655
+  - name: Copying calico.yml
+    become: true
+    copy:
+        src: ../template/calico.yaml 
+        dest: /opt/
+        mode: 0644
+  - name: find ca from master1
+    become: true
+    shell: find /etc/kubernetes/ca/ -type f | cut -d '/' -f5 
+    register: file_to_copy
+    when: inventory_hostname_short == FRIST_NODENAME
+  - name: copying ca to ansible node
+    fetch: src=/etc/kubernetes/ca/{{ item }} dest=/tmp/ca/ flat=yes
+    with_items: "{{ file_to_copy.stdout_lines }}"
+    when: inventory_hostname_short == FRIST_NODENAME 
+  - name: Copying /tmp/ca to other master
+    synchronize:
+      src: "/tmp/ca/"
+      dest: "/etc/kubernetes/ca/"
+      mode: push
+    when: inventory_hostname_short != FRIST_NODENAME
+  
+  - name: find pki from master1
+    become: true
+    shell: find /etc/kubernetes/pki/ -type f | cut -d '/' -f5
+    register: file_to_copy_pki
+    when: inventory_hostname_short == FRIST_NODENAME
+
+  - name: copying pki to ansible node
+    fetch: src=/etc/kubernetes/pki/{{ item }} dest=/tmp/pki/ flat=yes
+    with_items: "{{ file_to_copy_pki.stdout_lines }}"
+    when: inventory_hostname_short == FRIST_NODENAME
+  - name: Copying /tmp/pki to other master
+    synchronize:
+      src: "/tmp/pki/"
+      dest: "/etc/kubernetes/pki/"
+      mode: push
+    when: inventory_hostname_short != FRIST_NODENAME
+  - name: rm  /etc/kubernetes/pki/apiserver.* run inventory_hostname_short != FRIST_NODENAME
+    shell: rm -rf  /etc/kubernetes/pki/apiserver.*
+    when: inventory_hostname_short != FRIST_NODENAME
