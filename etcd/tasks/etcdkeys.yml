@@ -13,34 +13,35 @@
       path: /usr/bin/cfssljson
     register: downloadcfssljson
   - name: download-cfssl
-    get_url: url=https://pkg.cfssl.org/R1.2/cfssl_linux-amd64 dest=/usr/bin/cfssl 
-    when: downloadcfssl.stat.exists == False 
+    get_url: url=https://pkg.cfssl.org/R1.2/cfssl_linux-amd64 dest=/usr/bin/cfssl
+    when: downloadcfssl.stat.exists == False
   - name: download-cfssl-json
-    get_url: url=https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64 dest=/usr/bin/cfssljson 
-    when: downloadcfssljson.stat.exists == False 
+    get_url: url=https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64 dest=/usr/bin/cfssljson
+    when: downloadcfssljson.stat.exists == False
   - name : change-Permission
-    file: path={{ item }}  mode="777" 
+    file: path={{ item }}  mode="777"
     with_items:
       - /usr/bin/cfssl
       - /usr/bin/cfssljson
-    when: ansible_hostname == FRIST_NODENAME 
+
+    when: inventory_hostname_short == FRIST_NODENAME
   - name: mkdir /tmp/{{ PATH_KEYS }}
     shell: mkdir -p /tmp/{{ PATH_KEYS }}
   - name: generate cert and Pkeys
-    template: src=../template/genkeys.j2 dest=/tmp/genkeys.sh mode=0655 
-    when: ansible_hostname == FRIST_NODENAME
+    template: src=../template/genkeys.j2 dest=/tmp/genkeys.sh mode=0655
+    when: inventory_hostname_short == FRIST_NODENAME
   - name: copy ca-csr
     template: src=../template/ca-csr.j2 dest=/tmp/{{ PATH_KEYS}}/ca-csr.json mode=0644
-    when: ansible_hostname == FRIST_NODENAME
+    when: inventory_hostname_short == FRIST_NODENAME
   - name: copy ca-config.json
     template: src=../template/ca-config.j2 dest=/tmp/{{ PATH_KEYS}}/ca-config.json  mode=0644
-    when: ansible_hostname == FRIST_NODENAME 
+    when: inventory_hostname_short == FRIST_NODENAME
   - name: initialize-keys
     shell : cfssl gencert -initca /tmp/{{ PATH_KEYS }}/ca-csr.json | cfssljson -bare /tmp/{{ PATH_KEYS }}/ca
-    when: ansible_hostname == FRIST_NODENAME
+    when:  inventory_hostname_short == FRIST_NODENAME
   - name: execute script
     command: /bin/bash /tmp/genkeys.sh
-    when: ansible_hostname ==FRIST_NODENAME
+    when:  inventory_hostname_short == FRIST_NODENAME
   - name: check if /etc/etcd directory
     stat:
       path: /etc/etcd/
@@ -48,19 +49,3 @@
   - name: mkdir /etc/etcd/
     shell: mkdir /etc/etcd/
     when: etcd.stat.exists == False
-  - name: copy-keys*****************
-    copy:  src=/tmp/{{PATH_KEYS}}/{{item}}   dest=/etc/etcd  mode=0644
-    with_items:
-      - kubernetes-key.pem 
-      - kubernetes.pem
-      - ca.pem
-    when: ansible_hostname == FRIST_NODENAME
-  - name: COPY kubernetes.pem
-    fetch:  src=/etc/etcd/kubernetes.pem dest=/tmp/
-    when: ansible_hostname == FRIST_NODENAME
-  - name: COPY kubernetes-key.pem
-    fetch:  src=/etc/etcd/kubernetes-key.pem dest=/tmp/
-    when: ansible_hostname == FRIST_NODENAME 
-  - name: COPY ca.pem
-    fetch:  src=/etc/etcd/ca.pem dest=/tmp/
-    when: ansible_hostname == FRIST_NODENAME
