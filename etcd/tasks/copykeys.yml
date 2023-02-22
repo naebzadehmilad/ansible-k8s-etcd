@@ -1,0 +1,17 @@
+- hosts: etcd
+  remote_user: root
+  become: yes
+  vars_files:
+    - ../etcd-vars/etcd-vars.yml
+  tasks:
+  - name: copy-keys*****************
+    copy:
+      src: /tmp/{{PATH_KEYS}}/{{item}}
+      dest: /etc/etcd
+      mode: 0644
+      remote_src: yes
+    with_items:
+      - kubernetes-key.pem
+      - kubernetes.pem
+      - ca.pem
+    when: inventory_hostname_short == FRIST_NODENAME
