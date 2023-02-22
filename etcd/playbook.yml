@@ -1,4 +1,4 @@
-- hosts: etcd 
+- hosts: etcd
   remote_user: root
 - name: configure /etc/hosts
   import_playbook: tasks/hosts.yml
@@ -6,10 +6,12 @@
   import_playbook: tasks/install.yml
 - name: etcd-keys
   import_playbook: tasks/etcdkeys.yml
-- name: etcd-config
-  import_playbook: tasks/etcdconfig.yml
+- name: etcd-keys-copy
+  import_playbook: tasks/copykeys.yml
 - name: copy-ca
   import_playbook: tasks/copy-ca.yml
+- name: etcd-config
+  import_playbook: tasks/etcdconfig.yml
 - name: etcd-service
   import_playbook: tasks/etcdservice.yml
 - name: etcdctl-health.yml
