@@ -1,20 +1,20 @@
 [etcd]
-HIG-DC1-G307-K8SM1 ansible_host=172.17.71.50 ansible_user=root
-HIG-DC1-G307-K8SM2 ansible_host=172.17.71.51 ansible_user=root
-HIG-DC1-G307-K8SM3 ansible_host=172.17.71.52 ansible_user=root
-HIG-DC1-G307-ETCD4 ansible_host=172.17.71.57 ansible_user=root
-HIG-DC1-G307-ETCD5 ansible_host=172.17.71.58 ansible_user=root
+HIG-DC1-G307-K8SM1 ansible_host=172.31.71.7 ansible_user=root
+HIG-DC1-G307-K8SM2 ansible_host=172.31.71.8 ansible_user=root
+HIG-DC1-G307-K8SM3 ansible_host=172.31.71.9 ansible_user=root
+HIG-DC1-G307-ETCD4 ansible_host=172.31.71.12 ansible_user=root
+HIG-DC1-G307-ETCD5 ansible_host=172.31.71.13 ansible_user=root
 
 [k8s-master]
-HIG-DC1-G307-K8SM1 ansible_host=172.17.71.50 ansible_user=root
-HIG-DC1-G307-K8SM2 ansible_host=172.17.71.51 ansible_user=root
-HIG-DC1-G307-K8SM3 ansible_host=172.17.71.52 ansible_user=root
+HIG-DC1-G307-K8SM1 ansible_host=172.31.71.7 ansible_user=root
+HIG-DC1-G307-K8SM2 ansible_host=172.31.71.8 ansible_user=root
+HIG-DC1-G307-K8SM3 ansible_host=172.31.71.9 ansible_user=root
 [worker]
-HIG-DC1-G307-K8SW1 ansible_host=172.17.71.53 ansible_user=root
-HIG-DC1-G307-K8SW2 ansible_host=172.17.71.54 ansible_user=root
-HIG-DC1-G307-K8SM3 ansible_host=172.17.71.55 ansible_user=root
-HIG-DC1-G307-K8SW4 ansible_host=172.17.71.56 ansible_user=root
-HIG-DC1-G307-K8SW5 ansible_host=172.17.71.56 ansible_user=root
+HIG-DC1-G307-K8SW1 ansible_host=172.31.71.21 ansible_user=root
+HIG-DC1-G307-K8SW2 ansible_host=172.31.71.22 ansible_user=root
+HIG-DC1-G307-K8SM3 ansible_host=172.31.71.23 ansible_user=root
+HIG-DC1-G307-K8SW4 ansible_host=172.31.71.24 ansible_user=root
+HIG-DC1-G307-K8SW5 ansible_host=172.31.71.25 ansible_user=root
 [gfs]
 gfs1 ansible_host=172.17.71.60 ansible_user=root
 gfs2 ansible_host=172.17.71.61 ansible_user=root
@@ -22,11 +22,11 @@ gfs2 ansible_host=172.17.71.61 ansible_user=root
 nginx1 ansible_host=172.17.71.18 ansible_user=root
 nginx2 ansible_host=172.17.71.19 ansible_user=root
 [k8s]
-HIG-DC1-G307-K8SM1 ansible_host=172.17.71.50 ansible_user=root
-HIG-DC1-G307-K8SM2 ansible_host=172.17.71.51 ansible_user=root
-HIG-DC1-G307-K8SM3 ansible_host=172.17.71.52 ansible_user=root
-HIG-DC1-G307-K8SW1 ansible_host=172.17.71.53 ansible_user=root
-HIG-DC1-G307-K8SW2 ansible_host=172.17.71.54 ansible_user=root
-HIG-DC1-G307-K8SM3 ansible_host=172.17.71.55 ansible_user=root
-HIG-DC1-G307-K8SW4 ansible_host=172.17.71.56 ansible_user=root
-HIG-DC1-G307-K8SW5 ansible_host=172.17.71.56 ansible_user=root
+HIG-DC1-G307-K8SM1 ansible_host=172.31.71.7 ansible_user=root
+HIG-DC1-G307-K8SM2 ansible_host=172.31.71.8 ansible_user=root
+HIG-DC1-G307-K8SM3 ansible_host=172.31.71.9 ansible_user=root
+HIG-DC1-G307-K8SW1 ansible_host=172.31.71.21 ansible_user=root
+HIG-DC1-G307-K8SW2 ansible_host=172.31.71.22 ansible_user=root
+HIG-DC1-G307-K8SM3 ansible_host=172.31.71.23 ansible_user=root
+HIG-DC1-G307-K8SW4 ansible_host=172.31.71.24 ansible_user=root
+HIG-DC1-G307-K8SW5 ansible_host=172.31.71.25 ansible_user=root
