@@ -12,10 +12,11 @@
         echo "net.ipv6.conf.default.disable_ipv6 = 1" >> /etc/sysctl.conf
         echo "fs.file-max = 65535" >> /etc/sysctl.conf
         echo "net.ipv4.ip_local_port_range = 1024 65000" >> /etc/sysctl.conf
-        echo "net.core.somaxconn = 32768" >> /etc/sysctl.conf
+        echo "net.core.somaxconn = 65000" >> /etc/sysctl.conf
         echo "vm.swappiness=10" >> /etc/sysctl.conf
         echo "vm.vfs_cache_pressure=10" >> /etc/sysctl.conf
         sysctl -p
+        sysctl --system
       when: "'####ADDED BY ANSIBLE####' not in sysctl_content.stdout"
 
     - name: kernel modules (overlay, br_netfilter) if not loaded
