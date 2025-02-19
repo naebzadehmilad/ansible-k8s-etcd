@@ -3,16 +3,20 @@
   vars_files:
     - ../vars/vars.yml
   tasks:
-  - name: change dns
+  - name: change dns to {{ DNS_SERVER }}
     shell: echo "nameserver {{ DNS_SERVER }}" > /etc/resolv.conf
-  - name: add-gpg-k8s
+  - name: add-gpg-k8s {{GPG_KEY_K8S}}
     shell:  curl  -fsSL   {{GPG_KEY_K8S}} | sudo gpg --dearmor --yes -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg && apt update
-  - name: add-repo-k8s
+  - name: add-repo-k8s {{REPO_URL}} | tee /etc/apt/sources.list.d/kubernetes.list
     shell: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] {{REPO_URL}}' | sudo tee /etc/apt/sources.list.d/kubernetes.list
-  - name: Install Kubernetes tools
+  - name: Install Kubernetes kubelet={{VERSION}}  kubectl={{VERSION}}  kubeadm={{VERSION}}
     apt:
       name:
         - kubelet={{VERSION}}
         - kubectl={{VERSION}}
         - kubeadm={{VERSION}}
       state: present
+    when: 
+      - ansible_facts.packages['kubelet'] is not defined
+      - ansible_facts.packages['kubectl'] is not defined
+      - ansible_facts.packages['kubeadm'] is not defined
