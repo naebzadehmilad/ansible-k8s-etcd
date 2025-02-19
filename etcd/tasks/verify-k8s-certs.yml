@@ -1,0 +1,28 @@
+- hosts: etcd
+  remote_user: root
+  become: yes
+  vars_files:
+    - ../etcd-vars/etcd-vars.yml
+  tasks:
+    - name: Display kubernetes certificate content and extract IPs and expiration time
+      command: "openssl x509 -in /tmp/{{ PATH_KEYS }}/kubernetes.pem -text -noout"
+      register: openssl_output
+      ignore_errors: yes
+      when: inventory_hostname_short == FRIST_NODENAME
+
+    - name: Extract IP addresses from the certificate
+      set_fact:
+        ips: "{{ openssl_output.stdout | regex_findall('IP Address:([\\d.]+)') }}"
+      when: inventory_hostname_short == FRIST_NODENAME
+
+    - name: Extract expiration date from the certificate
+      set_fact:
+        expiration_date: "{{ openssl_output.stdout | regex_search('Not After : (.+) GMT') }}"
+      when: inventory_hostname_short == FRIST_NODENAME 
+
+    - name: Show IP addresses and expiration date
+      debug:
+        msg:
+          - "IPs: {{ ips }}"
+          - "Expiration Date: {{ expiration_date }}"
+      when: inventory_hostname_short == FRIST_NODENAME 
