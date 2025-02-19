@@ -16,3 +16,6 @@
   import_playbook: tasks/etcdservice.yml
 - name: etcdctl-health.yml
   import_playbook: tasks/etcdctl-health.yml
+- name: verify-k8s-certs.yml
+  import_playbook: tasks/verify-k8s-certs.yml
+
