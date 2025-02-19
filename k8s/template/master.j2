@@ -1,20 +1,15 @@
-apiVersion: kubeadm.k8s.io/v1beta2
-kind: ClusterConfiguration
-kubernetesVersion: stable
-controlPlaneEndpoint: "{{FLOATIP}}:6449"
 etcd:
- external:
-   endpoints:
-   - https://{{ETCD1}}:2379
-   - https://{{ETCD2}}:2379
-   - https://{{ETCD3}}:2379
-   - https://{{ETCD4}}:2379
-   - https://{{ETCD5}}:2379
-   caFile: /etc/kubernetes/ca/ca.pem
-   certFile: /etc/kubernetes/ca/kubernetes.pem
-   keyFile: /etc/kubernetes/ca/kubernetes-key.pem
+  external:
+    endpoints:
+    {% for node in ETCD_NODES %}
+    - https://{{ node }}:2379
+    {% endfor %}
+
+    caFile: /etc/kubernetes/ca/ca.pem
+    certFile: /etc/kubernetes/ca/kubernetes.pem
+    keyFile: /etc/kubernetes/ca/kubernetes-key.pem
 networking:
- podSubnet: 20.8.0.0/16
+  podSubnet: 20.8.0.0/16
 apiServer:
   certSANs:
-    - "{{FLOATIP}}"
+    - "{{ FLOATIP }}"
