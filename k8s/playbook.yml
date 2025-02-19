@@ -1,7 +1,9 @@
 - hosts: k8s
   remote_user: root
+- name: install install kubelet,kubectl,kubeadm {{VERSION}}
+  import: tasks/add-repok8s.yml 
 - name: install containerd and kubernetes
-  import_playbook: tasks/install-k8s.yml
+  import_playbook: tasks/install-tools.yml
 - name: pullconfig k8s
   import_playbook: tasks/pull-config-k8s.yml
 - name: sysctl
