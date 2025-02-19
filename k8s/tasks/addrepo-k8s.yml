@@ -1,5 +1,6 @@
 - hosts: k8s
   gather_facts: true
+  strategy: free
   vars_files:
     - ../vars/vars.yml
   tasks:
