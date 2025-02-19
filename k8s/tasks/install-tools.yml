@@ -6,7 +6,7 @@
   tasks:
 
   - name: check helm is installed
-    command: helm -v 
+    command: helm version
     register: helm_installed
     ignore_errors: yes 
 
@@ -46,7 +46,7 @@
       state: directory
       mode: '0755'
   - name: reset containerd
-    shell: containerd config default > /etc/containerd/containerd.toml  && systemctl restart containerd
+    shell: mkdir -p /etc/containerd/ && containerd config default > /etc/containerd/containerd.toml  && systemctl restart containerd
   - name: disable swap
     shell: swapoff -a  
   - name: Disable SWAP in fstab 
