@@ -1,0 +1,18 @@
+- hosts: k8s
+  gather_facts: true
+  vars_files:
+    - ../vars/vars.yml
+  tasks:
+  - name: change dns
+    shell: echo "nameserver {{ DNS_SERVER }}" > /etc/resolv.conf
+  - name: add-gpg-k8s
+    shell:  curl  -fsSL   {{GPG_KEY_K8S}} | sudo gpg --dearmor --yes -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg && apt update
+  - name: add-repo-k8s
+    shell: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] {{REPO_URL}}' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+  - name: Install Kubernetes tools
+    apt:
+      name:
+        - kubelet={{VERSION}}
+        - kubectl={{VERSION}}
+        - kubeadm={{VERSION}}
+      state: present
