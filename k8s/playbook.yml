@@ -8,10 +8,7 @@
   import_playbook: tasks/sysctl.yml
 - name: master.yml
   import_playbook: tasks/master.yml
-- name: daemon.yml
-  import_playbook: tasks/daemon.yml
 - name:  haproxy.yml
   import_playbook: tasks/haproxy.yml
-- name: add_registry.yml
-  import_playbook: tasks/add_registry.yml
+
 
