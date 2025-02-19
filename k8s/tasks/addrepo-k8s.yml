@@ -6,6 +6,13 @@
   tasks:
   - name: change dns to {{ DNS_SERVER }}
     shell: echo "nameserver {{ DNS_SERVER }}" > /etc/resolv.conf
+  
+  - name:  /etc/apt/keyrings directory exists
+    file:
+      path: /etc/apt/keyrings
+      state: directory
+      mode: '0755'
+  
   - name: add-gpg-k8s {{GPG_KEY_K8S}}
     shell:  curl  -fsSL   {{GPG_KEY_K8S}} | sudo gpg --dearmor --yes -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg && apt update
   - name: add-repo-k8s {{REPO_URL}} | tee /etc/apt/sources.list.d/kubernetes.list
