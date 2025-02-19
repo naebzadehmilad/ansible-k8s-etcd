@@ -1,4 +1,4 @@
-- hosts: k8sm1-t
+- hosts: k8s
   gather_facts: true
   vars_files:
     - ../vars/vars.yml
