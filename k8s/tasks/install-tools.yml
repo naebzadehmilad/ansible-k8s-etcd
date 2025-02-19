@@ -3,11 +3,8 @@
   vars_files:
     - ../vars/vars.yml
   tasks:
-  - name: change dns
-    shell: echo "nameserver {{ DNS_SERVER }}" > /etc/resolv.conf
-
   - name: Check if nerdctl is installed
-    command: nerdctl -v 
+    command: nerdctl -v
     register: nerdctl_installed
     ignore_errors: yes
 
@@ -37,20 +34,11 @@
       path: /etc/apt/keyrings
       state: directory
       mode: '0755'
-  - name: add-gpg-k8s
-    shell:  curl  -fsSL   {{GPG_KEY_K8S}} | sudo gpg --dearmor --yes -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-  - name: add-repo-k8s
-    shell: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] {{REPO_URL}}' | sudo tee /etc/apt/sources.list.d/kubernetes.list 
-  - name: Install Kubernetes tools
-    apt:
-      name:
-        - kubelet={{VERSION}}
-        - kubectl={{VERSION}}
-        - kubeadm={{VERSION}}
-      state: present
+  - name: reset containerd
+    shell: containerd config default > /etc/containerd/containerd.toml  && systemctl restart containerd
   - name: disable swap
-    shell: swapoff -a  
-  - name: Disable SWAP in fstab 
+    shell: swapoff -a
+  - name: Disable SWAP in fstab
     replace:
       path: /etc/fstab
       regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
