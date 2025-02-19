@@ -1,32 +1,46 @@
-- hosts: k8s
-  remote_user: root
+- hosts: k8sm1-t
   gather_facts: true
   vars_files:
     - ../vars/vars.yml
   tasks:
   - name: change dns
-    shell: echo "nameserver 185.51.200.2 " > /etc/resolv.conf
+    shell: echo "nameserver {{ DNS_SERVER }}" > /etc/resolv.conf
+
+  - name: Check if nerdctl is installed
+    command: nerdctl -v 
+    register: nerdctl_installed
+    ignore_errors: yes
+
+  - name: Install nerdctl if not installed
+    shell: |
+      curl -fsSL https://github.com/containerd/nerdctl/releases/download/v2.0.3/nerdctl-2.0.3-linux-amd64.tar.gz -o /tmp/nerdctl-linux-amd64.tar.gz
+      tar -xzf /tmp/nerdctl-linux-amd64.tar.gz -C /tmp
+      mv /tmp/nerdctl /usr/local/bin/nerdctl
+    when: nerdctl_installed.rc != 0
+
   - name: Install required system packages
-    apt: name={{ item }} state=latest update_cache=yes
-    loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common']
-  - name: Add Docker GPG apt Key
-    apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
-        state: present
-  - name: Add Docker Repository
-    apt_repository:
-       repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{DIST_RELEASE}}" 
-       state: present
-  - name: Install docker
-    apt: name=docker.io state=latest update_cache=yes
-  - name: Add Kuber GPG apt Key
-    apt_key:
-        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg 
-        state: present
-  - name: Add Kuber Repository
-    apt_repository:
-       repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
-       state: present
+    apt:
+      name: "{{ item }}"
+      state: latest
+      update_cache: yes
+    loop:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+    when: ansible_facts.packages[item] is not defined
+
+  - name: Install containerd
+    apt: name=containerd state=latest update_cache=yes
+  - name:  /etc/apt/keyrings directory exists
+    file:
+      path: /etc/apt/keyrings
+      state: directory
+      mode: '0755'
+  - name: add-gpg-k8s
+    shell:  curl  -fsSL   {{GPG_KEY_K8S}} | sudo gpg --dearmor --yes -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  - name: add-repo-k8s
+    shell: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] {{REPO_URL}}' | sudo tee /etc/apt/sources.list.d/kubernetes.list 
   - name: Install Kubernetes tools
     apt:
       name:
