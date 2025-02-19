@@ -1,6 +1,6 @@
 - hosts: k8s
   remote_user: root
-- name: install docker and kubernetes
+- name: install containerd and kubernetes
   import_playbook: tasks/install-k8s.yml
 - name: pullconfig k8s
   import_playbook: tasks/pull-config-k8s.yml
@@ -10,5 +10,3 @@
   import_playbook: tasks/master.yml
 - name:  haproxy.yml
   import_playbook: tasks/haproxy.yml
-
-
