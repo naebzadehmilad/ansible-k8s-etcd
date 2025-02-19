@@ -29,11 +29,6 @@
 
   - name: Install containerd
     apt: name=containerd state=latest update_cache=yes
-  - name:  /etc/apt/keyrings directory exists
-    file:
-      path: /etc/apt/keyrings
-      state: directory
-      mode: '0755'
   - name: reset containerd
     shell: containerd config default > /etc/containerd/containerd.toml  && systemctl restart containerd
   - name: disable swap
