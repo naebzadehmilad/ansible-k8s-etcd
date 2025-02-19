@@ -10,8 +10,9 @@
     register: helm_installed
     ignore_errors: yes 
 
-  - name: install helm 
-    shell:  snap install helm --classic
+  #- name: install helm 
+  #  shell:  snap install helm --classic
+  #  when: ansible_hostname == FRIST_NODENAME
 
   - name: Check if nerdctl is installed
     command: nerdctl -v 
